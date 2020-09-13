@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Numerics;
 
 namespace Substrings
 {
@@ -11,9 +11,6 @@ namespace Substrings
 			Console.WriteLine("Please enter the input string:");
 			string input = Console.ReadLine();
 
-#if DEBUG
-			input = "29535123p48723487597645723645";
-#endif
 			Console.WriteLine();
 
 			FindSubstrings(input);
@@ -25,9 +22,10 @@ namespace Substrings
 		// 1. It does not contain any non-numeric characters
 		// 2. It starts and ends with the same digit
 		// 3. That digit does not occur anywhere inside the substring
+		// The implementation is based on BigIntegers, which allows for really big numbers - therefore, the input string can be of any length
 		private static void FindSubstrings(string input)
 		{
-			var numbers = new List<long>();
+			var numbers = new List<BigInteger>();
 
 			for (int i = 0; i < input.Length - 1; i++)
 			{
@@ -56,7 +54,7 @@ namespace Substrings
 					{
 						substr += input[j];
 
-						long value = long.Parse(substr);
+						var value = BigInteger.Parse(substr);
 
 						numbers.Add(value);
 
@@ -69,7 +67,7 @@ namespace Substrings
 				}
 			}
 
-			Console.WriteLine($"\nThe total value of all found numbers is: {numbers.Sum()}");
+			Console.WriteLine($"\nThe total value of all found numbers is: {SumOfNumbers(numbers)}");
 		}
 
 		// Displays the input string and highlights the given substring in it
@@ -90,7 +88,21 @@ namespace Substrings
 				Console.Write(input[i]);
 			}
 
+			Console.ForegroundColor = ConsoleColor.Gray;
 			Console.Write("\n");
+		}
+
+		// Returns a sum of all numbers in a list of BigIntegers (LINQ doesn't support Sum<BigInteger>()
+		private static BigInteger SumOfNumbers(List<BigInteger> numbers)
+		{
+			BigInteger sum = 0;
+
+			foreach (var num in numbers)
+			{
+				sum += num;
+			}
+
+			return sum;
 		}
 	}
 }
